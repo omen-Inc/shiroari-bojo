@@ -1,0 +1,14 @@
+{
+  "repo": "omen-Inc/shiroari-bojo",
+  "projectName": "シロアリボージョ",
+  "branch": "nightly",
+  "maxIssues": 3,
+  "issueTimeoutMinutes": 60,
+  "pagesNightlyUrl": "https://omen-inc.github.io/shiroari-bojo/nightly/",
+  "install": "npm ci",
+  "specSync": "npm run spec:sync -- --changes {out}",
+  "specDir": "docs/spec",
+  "sim": "npm run sim -- --games 1000 --out {out}",
+  "simTimeoutMinutes": 10,
+  "sideLabels": { "pest": "防除側", "termite": "シロアリ側" }
+}

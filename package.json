@@ -1,0 +1,29 @@
+{
+  "name": "shiroari-bojo",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "シロアリボージョ(仮) プロトタイプ:CPU対戦カードゲーム(シロアリ側 vs 防除業者側)",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "prepare": "node scripts/setup-hooks.mjs",
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "sim": "tsx scripts/sim.ts",
+    "spec:sync": "tsx scripts/spec-sync.ts"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65",
+    "@types/node": "^24.19.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.0"
+  }
+}

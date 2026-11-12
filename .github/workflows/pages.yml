@@ -1,0 +1,100 @@
+# main と nightly をそれぞれビルドし、1つの Pages サイトにまとめて公開する。
+#   main    → https://omen-inc.github.io/shiroari-bojo/          (BASE_PATH=/shiroari-bojo/)
+#   nightly → https://omen-inc.github.io/shiroari-bojo/nightly/  (BASE_PATH=/shiroari-bojo/nightly/)
+# nightly ブランチがまだなければ main だけを公開する。
+name: Pages
+
+on:
+  push:
+    branches: [main, nightly]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: main をチェックアウト
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: main/package-lock.json
+
+      - name: main のテストとビルド
+        working-directory: main
+        env:
+          BASE_PATH: /shiroari-bojo/
+        run: |
+          npm ci
+          npm test
+          npm run build
+
+      - name: nightly ブランチがあるか
+        id: nightly
+        working-directory: main
+        run: |
+          if git ls-remote --exit-code --heads origin nightly >/dev/null; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: nightly をチェックアウト
+        if: steps.nightly.outputs.exists == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: nightly
+          path: nightly
+
+      - name: nightly のテストとビルド
+        id: nightly_build
+        if: steps.nightly.outputs.exists == 'true'
+        # nightly が壊れていても main の公開は止めない(失敗はこのジョブの注記に残る)
+        continue-on-error: true
+        working-directory: nightly
+        env:
+          BASE_PATH: /shiroari-bojo/nightly/
+        run: |
+          npm ci
+          npm test
+          npm run build
+
+      - name: サイトをまとめる
+        run: |
+          mkdir -p site
+          cp -R main/dist/. site/
+          if [ "${{ steps.nightly_build.outcome }}" = "success" ]; then
+            mkdir -p site/nightly
+            cp -R nightly/dist/. site/nightly/
+          elif [ "${{ steps.nightly.outputs.exists }}" = "true" ]; then
+            echo "::warning::nightly のテストかビルドが失敗したため、/nightly/ は公開しません"
+          fi
+          touch site/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

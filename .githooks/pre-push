@@ -1,0 +1,42 @@
+#!/bin/sh
+# このリポジトリの push 制限(CLAUDE.md の禁止事項を機械的に守るためのフック)
+#  - main への push を拒否する(main への反映は omen が GitHub 上でマージする)
+#  - force push(リモートの先端が、push するコミットの祖先でない場合)を拒否する
+#  - リモートブランチの削除を拒否する
+# stdin: <local ref> <local sha> <remote ref> <remote sha>
+
+zero=$(git hash-object --stdin </dev/null | tr '0-9a-f' '0')
+status=0
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [ -z "$remote_ref" ] && continue
+
+  case "$remote_ref" in
+    refs/heads/main)
+      echo "pre-push: main への push は禁止です($local_ref -> $remote_ref)。nightly か作業ブランチに push してください。" >&2
+      status=1
+      continue
+      ;;
+  esac
+
+  if [ "$local_sha" = "$zero" ]; then
+    echo "pre-push: リモートブランチの削除は禁止です($remote_ref)。" >&2
+    status=1
+    continue
+  fi
+
+  if [ "$remote_sha" != "$zero" ]; then
+    if ! git cat-file -e "$remote_sha^{commit}" 2>/dev/null; then
+      echo "pre-push: リモートの先端 $remote_sha がローカルにありません。git fetch してから push してください($remote_ref)。" >&2
+      status=1
+      continue
+    fi
+    if ! git merge-base --is-ancestor "$remote_sha" "$local_sha"; then
+      echo "pre-push: force push は禁止です($remote_ref の先端が push するコミットの祖先ではありません)。" >&2
+      status=1
+      continue
+    fi
+  fi
+done
+
+exit $status

@@ -1,0 +1,312 @@
+{
+  "source": {
+    "databaseId": "89587a8f5c2d4fa583151ddc8df62d42",
+    "note": "Notion のカード一覧DBの写し。npm run spec:sync が生成する。手で編集しない"
+  },
+  "cards": [
+    {
+      "id": "worker-yamato",
+      "name": "職アリ-ヤマト",
+      "category": "シロアリ",
+      "status": "確定",
+      "cost": 1,
+      "counts": {
+        "termite": 4,
+        "pest": 0,
+        "outside": 0
+      },
+      "effect": "1枚分として数える。基本の侵食カード",
+      "favored": "",
+      "memo": "",
+      "basis": ""
+    },
+    {
+      "id": "worker-ie",
+      "name": "職アリ-イエ",
+      "category": "シロアリ",
+      "status": "確定",
+      "cost": 1,
+      "counts": {
+        "termite": 12,
+        "pest": 0,
+        "outside": 0
+      },
+      "effect": "同上",
+      "favored": "",
+      "memo": "",
+      "basis": ""
+    },
+    {
+      "id": "worker-kanzai",
+      "name": "職アリ-カンザイ",
+      "category": "シロアリ",
+      "status": "確定",
+      "cost": 1,
+      "counts": {
+        "termite": 4,
+        "pest": 0,
+        "outside": 0
+      },
+      "effect": "同上",
+      "favored": "",
+      "memo": "",
+      "basis": ""
+    },
+    {
+      "id": "soldier-yamato",
+      "name": "兵アリ-ヤマト",
+      "category": "シロアリ",
+      "status": "たたき台",
+      "cost": 2,
+      "counts": {
+        "termite": 2,
+        "pest": 0,
+        "outside": 0
+      },
+      "effect": "1枚分。いるポイントへの薬剤散布を1回無効化(兵アリ1枚につき1回)。ベイト工法は防げない",
+      "favored": "",
+      "memo": "",
+      "basis": ""
+    },
+    {
+      "id": "soldier-ie",
+      "name": "兵アリ-イエ",
+      "category": "シロアリ",
+      "status": "たたき台",
+      "cost": 2,
+      "counts": {
+        "termite": 5,
+        "pest": 0,
+        "outside": 0
+      },
+      "effect": "同上",
+      "favored": "",
+      "memo": "",
+      "basis": ""
+    },
+    {
+      "id": "soldier-kanzai",
+      "name": "兵アリ-カンザイ",
+      "category": "シロアリ",
+      "status": "たたき台",
+      "cost": 2,
+      "counts": {
+        "termite": 2,
+        "pest": 0,
+        "outside": 0
+      },
+      "effect": "同上",
+      "favored": "",
+      "memo": "",
+      "basis": ""
+    },
+    {
+      "id": "winged-yamato",
+      "name": "羽アリ-ヤマト",
+      "category": "シロアリ",
+      "status": "たたき台",
+      "cost": 2,
+      "counts": {
+        "termite": 1,
+        "pest": 0,
+        "outside": 0
+      },
+      "effect": "1枚分。次の自分のターン開始時に女王アリと入れ替わり、同種の職アリを山札から2枚手札に加える",
+      "favored": "",
+      "memo": "女王アリになる前に駆除されると女王アリにはならない",
+      "basis": ""
+    },
+    {
+      "id": "winged-ie",
+      "name": "羽アリ-イエ",
+      "category": "シロアリ",
+      "status": "たたき台",
+      "cost": 2,
+      "counts": {
+        "termite": 1,
+        "pest": 0,
+        "outside": 0
+      },
+      "effect": "同上",
+      "favored": "",
+      "memo": "同上",
+      "basis": ""
+    },
+    {
+      "id": "winged-kanzai",
+      "name": "羽アリ-カンザイ",
+      "category": "シロアリ",
+      "status": "たたき台",
+      "cost": 2,
+      "counts": {
+        "termite": 1,
+        "pest": 0,
+        "outside": 0
+      },
+      "effect": "同上",
+      "favored": "",
+      "memo": "同上",
+      "basis": ""
+    },
+    {
+      "id": "queen",
+      "name": "女王アリ-ヤマト/イエ/カンザイ",
+      "category": "シロアリ",
+      "status": "確定",
+      "cost": null,
+      "counts": {
+        "termite": 0,
+        "pest": 0,
+        "outside": 1
+      },
+      "effect": "山札に加えない。1枚分。成ったとき同種の職アリを山札から2枚手札へ(なければ空振り)",
+      "favored": "",
+      "memo": "手札からは出さず、羽アリが成ったときだけ場に出る",
+      "basis": ""
+    },
+    {
+      "id": "import-furniture",
+      "name": "輸入家具購入",
+      "category": "イベント(シロアリ側)",
+      "status": "確定",
+      "cost": 1,
+      "counts": {
+        "termite": 3,
+        "pest": 0,
+        "outside": 0
+      },
+      "effect": "【即時】山札からカンザイシロアリを1枚手札に加える(なければ空振り。仮:山札で最初に見つかったもの)",
+      "favored": "",
+      "memo": "場には残らない",
+      "basis": ""
+    },
+    {
+      "id": "swarm",
+      "name": "大量発生",
+      "category": "イベント(シロアリ側)",
+      "status": "確定",
+      "cost": 1,
+      "counts": {
+        "termite": 6,
+        "pest": 0,
+        "outside": 0
+      },
+      "effect": "指定ポイントに次の自分のターンまで、防除・駆除カードを置けなくする。シロアリ側はそのポイントにカードを置ける",
+      "favored": "",
+      "memo": "名称は仮",
+      "basis": ""
+    },
+    {
+      "id": "reinforce",
+      "name": "増援",
+      "category": "中立",
+      "status": "確定",
+      "cost": 1,
+      "counts": {
+        "termite": 5,
+        "pest": 7,
+        "outside": 0
+      },
+      "effect": "自分の山札から2枚ドローする",
+      "favored": "",
+      "memo": "名称は仮",
+      "basis": ""
+    },
+    {
+      "id": "scout",
+      "name": "偵察",
+      "category": "中立",
+      "status": "確定",
+      "cost": 1,
+      "counts": {
+        "termite": 1,
+        "pest": 4,
+        "outside": 0
+      },
+      "effect": "相手の手札を全て確認する(相手の手札がないときは使えない)",
+      "favored": "",
+      "memo": "名称は仮",
+      "basis": ""
+    },
+    {
+      "id": "disrupt",
+      "name": "妨害",
+      "category": "中立",
+      "status": "確定",
+      "cost": 1,
+      "counts": {
+        "termite": 1,
+        "pest": 4,
+        "outside": 0
+      },
+      "effect": "相手の手札をランダムに1枚捨てさせる(相手の手札がないときは使えない)",
+      "favored": "",
+      "memo": "名称は仮",
+      "basis": ""
+    },
+    {
+      "id": "foresight",
+      "name": "予知",
+      "category": "中立",
+      "status": "確定",
+      "cost": 1,
+      "counts": {
+        "termite": 2,
+        "pest": 4,
+        "outside": 0
+      },
+      "effect": "自分の山札の上3枚を見て1枚を手札に加え、残りを好きな順で山札の下に置く",
+      "favored": "",
+      "memo": "名称は仮",
+      "basis": ""
+    },
+    {
+      "id": "barrier",
+      "name": "バリア工法",
+      "category": "防除",
+      "status": "たたき台",
+      "cost": 2,
+      "counts": {
+        "termite": 0,
+        "pest": 9,
+        "outside": 0
+      },
+      "effect": "指定ポイントに3ターンの間、シロアリカードを置けなくする",
+      "favored": "",
+      "memo": "効果はクライアント確認後にFIX",
+      "basis": ""
+    },
+    {
+      "id": "spray",
+      "name": "薬剤散布",
+      "category": "駆除",
+      "status": "たたき台",
+      "cost": 1,
+      "counts": {
+        "termite": 0,
+        "pest": 15,
+        "outside": 0
+      },
+      "effect": "指定ポイントのシロアリカードを1枚除去する(仮:最後に置かれたカード)",
+      "favored": "",
+      "memo": "兵アリがいる場合は1回無効化される",
+      "basis": ""
+    },
+    {
+      "id": "bait",
+      "name": "ベイト工法",
+      "category": "駆除",
+      "status": "たたき台",
+      "cost": 2,
+      "counts": {
+        "termite": 0,
+        "pest": 7,
+        "outside": 0
+      },
+      "effect": "置いてから2回目の自分のターン開始時に、指定ポイントのヤマト・イエシロアリをすべて除去する(カンザイは対象外)",
+      "favored": "",
+      "memo": "同じポイントへの重ね置きは不可(仮)",
+      "basis": ""
+    }
+  ]
+}
