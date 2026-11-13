@@ -3,7 +3,7 @@
 
 import { POINT_BY_ID } from './points';
 import { destroyedCount, getPoint, infestationThreshold, log, pointLabel } from './state';
-import type { CardDef, CardInstance, GameState, PointId, Side } from './types';
+import type { CardDef, CardInstance, GameState, PlacedCard, PointId, PointState, Side } from './types';
 
 export type EffectStatus = 'implemented' | 'partial' | 'todo';
 
@@ -56,9 +56,36 @@ const workerEffect: CardEffect = {
   resolve: placeTermite,
 };
 
-// TODO(issue): 兵アリ — いるポイントへの薬剤散布を1回無効化(兵アリ1枚につき1回)。ベイト工法は防げない。
-//              現状は「1枚分として置ける」だけ。
-const soldierEffect: CardEffect = { ...workerEffect, status: 'partial' };
+// 兵アリ — 置く処理は職アリと同じ。いるポイントへの薬剤散布を1回無効化する(兵アリ1枚につき1回)。
+//          無効化の判定は sprayEffect.resolve から guardIndex を使って行う。ベイト工法は防げない(soldierGuardBlocks)。
+const soldierEffect: CardEffect = { ...workerEffect, status: 'implemented' };
+
+/** 兵アリの無効化が効く除去の種類 */
+export type RemovalKind = 'spray' | 'bait';
+
+/**
+ * 兵アリの無効化がその除去に効くか。薬剤散布には効き、ベイト工法には効かない。
+ * ベイト工法の除去処理を実装するときは、兵アリの無効化を確認せずにそのまま除去する(この関数が false を返す)。
+ */
+export function soldierGuardBlocks(kind: RemovalKind): boolean {
+  return kind === 'spray';
+}
+
+/** 無効化をまだ使っていない兵アリか */
+export function hasGuard(s: GameState, c: PlacedCard): boolean {
+  return s.defs[c.defId]?.caste === 'soldier' && !c.guardUsed;
+}
+
+/** 無効化をまだ使っていない兵アリのうち、最後に置かれたものの添字(いなければ -1) */
+export function guardIndex(s: GameState, pt: PointState): number {
+  for (let i = pt.stack.length - 1; i >= 0; i--) if (hasGuard(s, pt.stack[i])) return i;
+  return -1;
+}
+
+/** ポイントに残っている無効化の回数 */
+export function guardCount(s: GameState, pt: PointState): number {
+  return pt.stack.filter((c) => hasGuard(s, c)).length;
+}
 
 // TODO(issue): 羽アリ — 次の自分のターン開始時に女王アリと入れ替わり(羽アリは捨て札へ)、同種の職アリを山札から2枚手札に加える。
 //              女王アリになる前に駆除されたら女王アリにならない。現状は「1枚分として置ける」だけ。
@@ -87,7 +114,20 @@ const sprayEffect: CardEffect = {
   resolve(s, side, card, def, target) {
     if (!target) throw new Error('target required');
     const pt = getPoint(s, target);
-    // TODO(issue): 兵アリがいれば1回無効化する
+    // 無効化をまだ使っていない兵アリがいれば、最後に置かれた1枚の無効化を消費して除去しない
+    const gi = soldierGuardBlocks('spray') ? guardIndex(s, pt) : -1;
+    if (gi >= 0) {
+      const soldier = pt.stack[gi];
+      // stack の要素は複製元と共有しているので、書き換えずに新しいオブジェクトに差し替える
+      pt.stack[gi] = { ...soldier, guardUsed: true };
+      log(
+        s,
+        side,
+        `${def.name} は ${pointLabel(target)} の ${s.defs[soldier.defId]?.name ?? soldier.defId} に無効化された(残り無効化 ${guardCount(s, pt)} 回)`,
+      );
+      toDiscard(s, side, card);
+      return;
+    }
     const removed = pt.stack.pop();
     if (removed) {
       s.players[removed.owner].discard.push({ uid: removed.uid, defId: removed.defId });

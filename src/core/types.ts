@@ -62,6 +62,8 @@ export interface CardInstance {
 export interface PlacedCard extends CardInstance {
   owner: Side;
   turnPlaced: number;
+  /** 兵アリの薬剤散布無効化(1枚につき1回)を使ったか。兵アリ以外では使わない。未設定は未使用 */
+  guardUsed?: boolean;
 }
 
 export interface PointState {
