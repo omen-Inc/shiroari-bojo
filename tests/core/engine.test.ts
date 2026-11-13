@@ -201,7 +201,7 @@ describe('未実装カード', () => {
     expect(s.players.pest.discard.map((c) => c.defId)).toEqual(['barrier']);
   });
 
-  it('兵アリ・羽アリは1枚分として置ける(特殊効果は未実装)', () => {
+  it('兵アリ・羽アリは1枚分として置ける', () => {
     let s = stateWithHand('termite', ['soldier-kanzai']);
     s = applyAction(s, { type: 'play', uid: uidOf(s, 'soldier-kanzai'), target: 'beam' });
     expect(s.points.find((p) => p.id === 'beam')!.stack).toHaveLength(1);

@@ -24,7 +24,7 @@
 ## ブランチ運用
 - `main`:安定版。omen が週1回 nightly からマージする。**AI は push しない**
 - `nightly`:夜間の成果のマージ先
-- 作業ブランチ:`nightly/issue-<番号>`(nightly から切り、nightly へ PR)
+- 作業ブランチ:`nightly-issue-<番号>`(nightly から切り、nightly へ PR)
 
 ## 禁止事項
 - main への push、force push(`.githooks/pre-push` が拒否する。`--no-verify` で回避しない)
