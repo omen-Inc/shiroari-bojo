@@ -8,7 +8,7 @@
 // TODO(issue): 相手の手札・山札を見ずに考える(現状は状態をすべて見ている)
 // TODO(issue): 難易度設定(epsilon や評価の重みを変える)
 
-import { effectFor } from '../effects';
+import { effectFor, guardCount } from '../effects';
 import { applyAction, legalActions } from '../engine';
 import type { Rng } from '../rng';
 import { POINT_BY_ID } from '../points';
@@ -52,6 +52,8 @@ export function scoreAction(s: GameState, a: Action, rng: Rng): number {
     return score;
   }
   // 防除業者側(薬剤散布)
+  // 兵アリの無効化が残っているポイントは、撒いても枚数が減らないので優先度を下げる(無効化を削る意味はある)
+  if (guardCount(s, pt) > 0) return 5 + n * 3 + noise;
   let score = 10 + n * 15 + noise;
   if (n + 1 >= need) score += 100;
   return score;
